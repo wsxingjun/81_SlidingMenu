@@ -28,6 +28,10 @@ public class SlideMenu extends ViewGroup {
     private int downx;
     private int moveX;
     private int scrollX;
+    //预设两种状态
+    public static final int MAIN_STATE = 0;
+    public static final int MENU_STATE = 1;
+    private int currentState = MAIN_STATE;
 
     public SlideMenu(Context context) {
         super(context);
@@ -116,12 +120,28 @@ public class SlideMenu extends ViewGroup {
                 break;
 
             case MotionEvent.ACTION_UP:
+                int leftCenter = (int) (- getChildAt(0).getMeasuredWidth() / 2.0f);
+                if (getScrollX() < leftCenter){
+                    currentState = MENU_STATE;
+                    updateCurrentContent();
+                }else {
+                    currentState = MAIN_STATE;
+                    updateCurrentContent();
+                }
                 break;
             default:
                 break;
 
         }
         return true;//消费事件
+    }
+
+    private void updateCurrentContent() {
+        if (currentState == MENU_STATE){
+            scrollTo(-getChildAt(0).getMeasuredWidth(),0);
+        }else {
+            scrollTo(0,0);
+        }
     }
 }
 
