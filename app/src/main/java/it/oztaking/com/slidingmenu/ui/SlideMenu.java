@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Scroller;
 
 /**
@@ -51,6 +52,7 @@ public class SlideMenu extends ViewGroup {
     }
 
     private void init() {
+        //初始化滚动器，数字模拟器
         scroller = new Scroller(getContext());
     }
 
@@ -137,10 +139,41 @@ public class SlideMenu extends ViewGroup {
     }
 
     private void updateCurrentContent() {
-        if (currentState == MENU_STATE){
+        /*方法1*/
+       /* if (currentState == MENU_STATE){
             scrollTo(-getChildAt(0).getMeasuredWidth(),0);
         }else {
             scrollTo(0,0);
+        }*/
+       /*方法2*/
+        int startX = getScrollX();
+        int dx = 0;
+        if (currentState == MENU_STATE){
+            dx = -getChildAt(0).getMeasuredWidth() -startX;
+        }else {
+            dx = 0 - startX;
+        }
+
+
+        int duration = Math.abs(dx * 2);
+        /**
+         * starX：开始的x值；
+         * startY：卡是的Y值；
+         * dx:将要发生的水平变化量，移动x的距离；
+         * dy：将要发生的竖直变化量，移动y的距离；
+         * duration：数据模拟持续的时长；
+         */
+        scroller.startScroll(startX,0,dx,0,duration);
+        invalidate();//重新绘制界面
+    }
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (scroller.computeScrollOffset()){
+            int currX = scroller.getCurrX();
+            scrollTo(currX,0);//滚过去
+            invalidate();//重新绘制界面；
         }
     }
 }
