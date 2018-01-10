@@ -138,6 +138,31 @@ public class SlideMenu extends ViewGroup {
         return true;//消费事件
     }
 
+
+    //按钮事件的打开和关闭
+    public void open(){
+        currentState = MENU_STATE;
+        updateCurrentContent();
+
+    }
+
+    public void close(){
+        currentState = MAIN_STATE;
+        updateCurrentContent();
+    }
+
+    public void switchState(){
+        if (currentState == MAIN_STATE){
+            open();
+        }else {
+            close();
+        }
+    }
+
+    public int getCurrentState(){
+        return currentState;
+    }
+
     private void updateCurrentContent() {
         /*方法1*/
        /* if (currentState == MENU_STATE){
