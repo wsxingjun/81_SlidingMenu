@@ -27,12 +27,14 @@ public class SlideMenu extends ViewGroup {
 
     private Scroller scroller;
     private int downx;
+    private int downy;
     private int moveX;
     private int scrollX;
     //预设两种状态
     public static final int MAIN_STATE = 0;
     public static final int MENU_STATE = 1;
     private int currentState = MAIN_STATE;
+
 
     public SlideMenu(Context context) {
         super(context);
@@ -200,6 +202,33 @@ public class SlideMenu extends ViewGroup {
             scrollTo(currX,0);//滚过去
             invalidate();//重新绘制界面；
         }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                downx = (int) ev.getX();
+                downy = (int) ev.getY();
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                float xOffset = Math.abs(ev.getX() - downx);
+                float yOffset = Math.abs(ev.getY() - downy);
+
+                if (xOffset > yOffset && xOffset > 5){
+                    return true; //拦截此次的触摸事件
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            default:
+                break;
+
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 }
 
